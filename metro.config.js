@@ -28,20 +28,24 @@ function findPnpmPackageWithBuild(packageName) {
   for (const entry of entries) {
     if (!entry.startsWith(dirPrefix)) continue;
     const pkgPath = path.join(pnpmDir, entry, 'node_modules', packageName);
-    const buildIndex = path.join(pkgPath, 'build', 'index.js');
-    if (fs.existsSync(buildIndex)) {
-      return pkgPath;
+    const buildEntry = path.join(pkgPath, 'build', 'index.js');
+    if (fs.existsSync(buildEntry)) {
+      return buildEntry;
+    }
+    const rootIndex = path.join(pkgPath, 'index.js');
+    if (fs.existsSync(rootIndex)) {
+      return rootIndex;
     }
   }
   return null;
 }
 
-const expoModulesCorePath = findPnpmPackageWithBuild('expo-modules-core');
+const expoModulesCoreEntry = findPnpmPackageWithBuild('expo-modules-core');
 
-if (expoModulesCorePath) {
+if (expoModulesCoreEntry) {
   config.resolver.extraNodeModules = {
     ...(config.resolver.extraNodeModules || {}),
-    'expo-modules-core': expoModulesCorePath,
+    'expo-modules-core': expoModulesCoreEntry,
   };
 }
 
