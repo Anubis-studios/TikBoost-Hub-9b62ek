@@ -68,6 +68,7 @@
     "react-native-url-polyfill": "^2.0.0",
     "@privacyresearch/libsignal-protocol-typescript": "0.0.16",
     "@react-native-picker/picker": "2.11.0",
+    "lucide-react-native": "latest",
     "nativewind": "^4.1.23",
     "zustand": "^5.0.2",
     "react-native-svg": "15.11.2",
