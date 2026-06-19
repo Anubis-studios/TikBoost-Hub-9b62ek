@@ -30,3 +30,33 @@ jobs:
 
       - name: Validate Expo build configuration
         run: npx expo prebuild --dry-run
+
+      - name: Install Expo CLI & EAS CLI
+        run: |
+          npm install -g expo-cli
+          npm install -g eas-cli
+
+      - name: Expo Login
+        run: eas login --token $EXPO_TOKEN
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build APK (Classic Expo)
+        run: expo build:android -t apk
+
+      - name: Build AAB (EAS Build)
+        run: eas build --platform android --profile production --non-interactive
+
+      - name: Collect Build Artifacts
+        run: |
+          mkdir -p expo-builds
+          APK=$(find . -name "*.apk" | head -n 1)
+          AAB=$(find . -name "*.aab" | head -n 1)
+          if [ -f "$APK" ]; then cp "$APK" expo-builds/app-release.apk; fi
+          if [ -f "$AAB" ]; then cp "$AAB" expo-builds/app-release.aab; fi
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: expo-builds
+          path: expo-builds/
