@@ -1,0 +1,36 @@
+name: Expo Hosting Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+
+      - name: Build static web bundle
+        run: npx expo export --platform web
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Expo Hosting
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          npx expo deploy:web --non-interactive
