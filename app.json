@@ -3,13 +3,17 @@
     "name": "onspace-app",
     "slug": "onspace-app",
     "version": "1.0.0",
+    "sdkVersion": "56.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
     "scheme": "onspaceapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "applePay": {
+        "merchantIdentifier": "merchant.com.onspaceapp"
+      }
     },
     "android": {
       "adaptiveIcon": {
