@@ -38,7 +38,7 @@ const FAQ_DATA: FAQItem[] = [
     id: 'a2',
     category: 'account',
     question: 'Can I change my TikTok username?',
-    answer: 'Currently your TikTok username is set during signup. Please contact our support team at support@tikboost.app if you need to update it.',
+    answer: 'Currently your TikTok username is set during signup. Please contact our support team at epticwolf27@gmail.com if you need to update it.',
   },
   {
     id: 'a3',
@@ -56,7 +56,7 @@ const FAQ_DATA: FAQItem[] = [
     id: 'a5',
     category: 'account',
     question: 'How do I delete my account?',
-    answer: 'To delete your account, please contact our support team at support@tikboost.app with your registered email address. Account deletion is permanent and cannot be undone.',
+    answer: 'To delete your account, please contact our support team at epticwolf27@gmail.com with your registered email address. Account deletion is permanent and cannot be undone.',
   },
   // Services
   {
@@ -124,7 +124,7 @@ const FAQ_DATA: FAQItem[] = [
     id: 'g5',
     category: 'general',
     question: 'How do I contact support?',
-    answer: 'For help, email us at support@tikboost.app. We typically respond within 24 hours. You can also check this FAQ for answers to common questions.',
+    answer: 'For help, email us at epticwolf27@gmail.com. We typically respond within 24 hours. You can also check this FAQ for answers to common questions.',
   },
 ];
 
@@ -283,7 +283,7 @@ export default function HelpScreen() {
           <MaterialIcons name="headset-mic" size={28} color={Colors.primary} />
           <View style={{ flex: 1 }}>
             <Text style={styles.supportTitle}>Still need help?</Text>
-            <Text style={styles.supportSub}>Contact us at support@tikboost.app</Text>
+            <Text style={styles.supportSub}>Contact us at epticwolf27@gmail.com</Text>
           </View>
           <MaterialIcons name="open-in-new" size={18} color={Colors.textMuted} />
         </View>
