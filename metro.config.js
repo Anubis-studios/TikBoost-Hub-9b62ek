@@ -1,24 +1,48 @@
 const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
+const fs = require('fs');
 
 const config = getDefaultConfig(__dirname);
 
-// Fix pnpm hoisting issue with expo-modules-core
 config.resolver.resolverMainFields = ['react-native', 'browser', 'main'];
 
-config.resolver.extraNodeModules = new Proxy(
-  {},
-  {
-    get: (target, name) => {
-      if (typeof name !== 'string') return undefined;
-      // Try to resolve from the project root first
-      try {
-        return path.dirname(require.resolve(name + '/package.json', { paths: [__dirname] }));
-      } catch {
-        return path.join(__dirname, `node_modules/${name}`);
-      }
-    },
+/**
+ * Fix pnpm hoisting issue: the hoisted `.pnpm/node_modules/expo-modules-core`
+ * doesn't contain build artifacts. We scan the pnpm store to find the real
+ * package that actually has `build/index.js`.
+ */
+function findPnpmPackageWithBuild(packageName) {
+  const pnpmDir = path.join(__dirname, 'node_modules/.pnpm');
+  if (!fs.existsSync(pnpmDir)) return null;
+
+  // Normalise scoped packages: @expo/vector-icons -> @expo+vector-icons
+  const dirPrefix = packageName.replace(/\//g, '+').replace(/^@/, '');
+
+  let entries;
+  try {
+    entries = fs.readdirSync(pnpmDir);
+  } catch {
+    return null;
   }
-);
+
+  for (const entry of entries) {
+    if (!entry.startsWith(dirPrefix)) continue;
+    const pkgPath = path.join(pnpmDir, entry, 'node_modules', packageName);
+    const buildIndex = path.join(pkgPath, 'build', 'index.js');
+    if (fs.existsSync(buildIndex)) {
+      return pkgPath;
+    }
+  }
+  return null;
+}
+
+const expoModulesCorePath = findPnpmPackageWithBuild('expo-modules-core');
+
+if (expoModulesCorePath) {
+  config.resolver.extraNodeModules = {
+    ...(config.resolver.extraNodeModules || {}),
+    'expo-modules-core': expoModulesCorePath,
+  };
+}
 
 module.exports = config;
