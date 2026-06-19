@@ -1,0 +1,47 @@
+name: Expo CI with Artifacts
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build web bundle
+        run: npm run build --if-present
+        env:
+          NODE_ENV: production
+
+      - name: Upload web build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: |
+            dist
+            build
+            .expo
+
+      - name: Upload app artifacts (if any)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-artifacts
+          path: |
+            android/app/build/outputs
+            ios/build
+          if-no-files-found: ignore
